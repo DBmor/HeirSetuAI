@@ -2,10 +2,12 @@
 from flask import Flask
 from app.extensions import db, jwt, oauth
 from app.blueprints.auth.routes import auth_bp
+from app.blueprints.company.routes import company_bp
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
+    app.register_blueprint(company_bp)
 
     db.init_app(app)
     jwt.init_app(app)

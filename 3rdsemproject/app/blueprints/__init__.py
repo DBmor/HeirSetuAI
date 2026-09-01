@@ -1,0 +1,1 @@
+from app.blueprints.company.routes import company_bp
