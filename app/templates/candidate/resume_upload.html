@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Resume | HeirSetuAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+      color: #333;
+      min-height: 100vh;
+    }
+    .navbar {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+    .navbar a { text-decoration: none; color: #0066cc; font-weight: 700; font-size: 1.2rem; }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 0 2rem; }
+
+    .card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Manrope', sans-serif;
+      color: #333;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .upload-zone {
+      border: 2px dashed #0066cc;
+      border-radius: 8px;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #f9fbff;
+      margin-bottom: 2rem;
+    }
+
+    .upload-zone:hover {
+      background: #f0f8ff;
+      border-color: #0052a3;
+    }
+
+    .upload-zone.dragover {
+      background: #e8f5ff;
+      border-color: #00cc99;
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .upload-zone p {
+      margin: 0.5rem 0;
+      color: #666;
+    }
+
+    .upload-zone strong {
+      color: #0066cc;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      display: block;
+      width: auto;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn.primary {
+      background: #0066cc;
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: #0052a3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,102,204,0.3);
+    }
+
+    .btn.secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn.secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .help-text {
+      font-size: 0.9rem;
+      color: #999;
+      margin-top: 0.5rem;
+    }
+
+    .file-info {
+      padding: 1rem;
+      background: #f0f8ff;
+      border-left: 4px solid #0066cc;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+
+    .file-info strong { color: #0066cc; display: block; margin-bottom: 0.25rem; }
+    .file-info small { color: #666; }
+
+    .error {
+      background: #fff4f4;
+      border-left: 4px solid #e74c3c;
+      padding: 1rem;
+      border-radius: 4px;
+      color: #c0392b;
+      margin-bottom: 1rem;
+    }
+
+    .success {
+      background: #f0f8e8;
+      border-left: 4px solid #00cc99;
+      padding: 1rem;
+      border-radius: 4px;
+      color: #2d5016;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; }
+      .btn-group { flex-direction: column; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="{{ url_for('candidate.home') }}">← Back to Dashboard</a>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <h1>📄 Upload Your Resume</h1>
+      <p class="subtitle">Add or update your resume to apply for jobs</p>
+
+      <form id="resumeForm" enctype="multipart/form-data" method="POST">
+        <!-- File Upload Zone -->
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-icon">📁</div>
+          <strong>Drag and drop your resume here</strong>
+          <p>or click to browse</p>
+          <p style="font-size: 0.85rem; color: #999;">PDF, DOC, DOCX, or TXT (Max 10MB)</p>
+          <input type="file" id="fileInput" name="resume_file" accept=".pdf,.doc,.docx,.txt" required>
+        </div>
+
+        <!-- Selected File Info -->
+        <div id="fileInfo" style="display: none;">
+          <div class="file-info">
+            <strong id="fileName">No file selected</strong>
+            <small id="fileSize">Size: 0 KB</small>
+          </div>
+        </div>
+
+        <!-- Resume Title -->
+        <div class="form-group">
+          <label for="title">Resume Title (Optional)</label>
+          <input type="text" id="title" name="title" placeholder="e.g., Senior Developer Resume 2024">
+          <p class="help-text">A descriptive name to help you remember this version</p>
+        </div>
+
+        <!-- Set as Primary -->
+        <div class="checkbox-group">
+          <input type="checkbox" id="isPrimary" name="is_primary" value="true">
+          <label for="isPrimary">Set as my primary resume for job applications</label>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="btn-group">
+          <a href="{{ url_for('candidate.home') }}" class="btn secondary">Cancel</a>
+          <button type="submit" class="btn primary" id="submitBtn" disabled>Upload Resume</button>
+        </div>
+      </form>
+
+      <!-- Tips -->
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e0e0e0;">
+        <h3 style="margin-bottom: 1rem;">💡 Tips for Best Results</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 0.5rem 0; color: #666;">✓ Use standard formatting (no images or creative layouts)</li>
+          <li style="padding: 0.5rem 0; color: #666;">✓ Include relevant keywords for your field</li>
+          <li style="padding: 0.5rem 0; color: #666;">✓ Keep it to 1-2 pages</li>
+          <li style="padding: 0.5rem 0; color: #666;">✓ Use clear section headings and bullet points</li>
+          <li style="padding: 0.5rem 0; color: #666;">✓ Proofread for spelling and grammar</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const submitBtn = document.getElementById('submitBtn');
+    const form = document.getElementById('resumeForm');
+
+    // Click to upload
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        updateFileInfo();
+      }
+    });
+
+    // File input change
+    fileInput.addEventListener('change', updateFileInfo);
+
+    function updateFileInfo() {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName.textContent = file.name;
+        fileSize.textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
+        fileInfo.style.display = 'block';
+        submitBtn.disabled = false;
+        uploadZone.style.opacity = '0.5';
+      }
+    }
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      submitBtn.textContent = 'Uploading...';
+      submitBtn.disabled = true;
+
+      try {
+        const response = await fetch('{{ url_for("candidate.upload_resume") }}', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-TOKEN': getCookie('csrf_access_token')
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Show success message
+          const successMsg = document.createElement('div');
+          successMsg.className = 'success';
+          successMsg.textContent = '✓ ' + data.message;
+          form.insertBefore(successMsg, form.firstChild);
+
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            window.location.href = '{{ url_for("candidate.view_resumes") }}';
+          }, 2000);
+        } else {
+          alert('Error: ' + (data.message || 'Upload failed'));
+          submitBtn.textContent = 'Upload Resume';
+          submitBtn.disabled = false;
+        }
+      } catch (error) {
+        alert('Error uploading resume: ' + error.message);
+        submitBtn.textContent = 'Upload Resume';
+        submitBtn.disabled = false;
+      }
+    });
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return '';
+    }
+  </script>
+</body>
+</html>

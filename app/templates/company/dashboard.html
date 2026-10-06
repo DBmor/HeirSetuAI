@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Dashboard | HeirSetuAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    .navbar {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .navbar .brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .navbar a { text-decoration: none; color: #666; font-weight: 500; }
+    .navbar a:hover { color: #0066cc; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+    .welcome-section {
+      background: linear-gradient(135deg, #0066cc 0%, #004080 100%);
+      color: white;
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0,102,204,0.2);
+    }
+    .welcome-section h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Manrope', sans-serif;
+    }
+    .welcome-section p { font-size: 1.1rem; opacity: 0.9; }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .card h3 { font-size: 0.9rem; color: #666; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .card .number { font-size: 2rem; font-weight: 700; color: #0066cc; }
+    .status-badge {
+      display: inline-block;
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .status-badge.verification_in_progress { background: #fff3cd; color: #856404; }
+    .status-badge.approved { background: #d4edda; color: #155724; }
+    .status-badge.pending { background: #e2e3e5; color: #383d41; }
+
+    .btn {
+      display: inline-block;
+      background: #0066cc;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #0052a3; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="brand">HeirSetuAI</a>
+    <div class="nav-links">
+      <a href="/company/dashboard">Dashboard</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/company/profile">Profile</a>
+      <a href="/auth/login">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="welcome-section">
+      <h1>Welcome, {{ company.company_legal_name or user.name }}</h1>
+      <p>Application ID: <strong>{{ company.application_id or 'N/A' }}</strong></p>
+    </div>
+
+    <div class="grid-4">
+      <div class="card">
+        <h3>Verification Status</h3>
+        <span class="status-badge {{ company.status }}">{{ company.status or 'Pending' }}</span>
+      </div>
+      <div class="card">
+        <h3>Legitimacy Score</h3>
+        <div class="number">{{ company.legitimacy_score or 'N/A' }}</div>
+      </div>
+      <div class="card">
+        <h3>Active Jobs</h3>
+        <div class="number">0</div>
+      </div>
+      <div class="card">
+        <h3>Total Applicants</h3>
+        <div class="number">0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Actions</h2>
+      <p style="margin: 1rem 0; color: #666;">Manage your company profile and job postings.</p>
+      <a href="/jobs" class="btn">View Jobs</a>
+      <a href="/company/profile" class="btn" style="background: #4a5568; margin-left: 0.5rem;">View Profile Details</a>
+    </div>
+  </div>
+</body>
+</html>

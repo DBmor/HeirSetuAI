@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company registration | HeirSetuAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/company-register.css') }}">
+  <style>.required-label::after{content:' *';color:#c62828;font-weight:800}</style>
+</head>
+<body>
+  <main class="registration-shell">
+    <header class="topbar">
+      <a class="brand" href="/login" aria-label="HeirSetuAI home">
+        <span class="brand-mark">H</span>
+        <span><strong>HeirSetuAI</strong><small>Trusted hiring, verified companies</small></span>
+      </a>
+      <span class="step-counter">Step <b id="stepNumber">1</b> of 5</span>
+    </header>
+
+    <nav class="progress" aria-label="Registration progress">
+      <div class="progress-line"><span id="progressFill"></span></div>
+      <ol>
+        <li class="active" data-step="1"><span>1</span><small>Representative</small></li>
+        <li data-step="2"><span>2</span><small>Company details</small></li>
+        <li data-step="3"><span>3</span><small>Documents</small></li>
+        <li data-step="4"><span>4</span><small>Verify & secure</small></li>
+        <li data-step="5"><span>5</span><small>Result</small></li>
+      </ol>
+    </nav>
+
+    <section class="content-card">
+      <form id="companyRegistrationForm" novalidate>
+        <div class="step-panel active" data-panel="1">
+          <div class="panel-heading"><span class="heading-icon">01</span><div><p class="eyebrow">Representative verification</p><h1>Tell us who you are</h1><p>Verify your identity as an authorized representative.</p></div></div>
+          <div class="field-grid">
+            <label>Full name<input name="representative_name" type="text" placeholder="e.g. Bhavika Dhamecha" required></label>
+            <label>Designation<input name="designation" type="text" placeholder="e.g. HR Manager" required></label>
+            <label>Official company email<div class="input-action"><input name="official_email" type="email" placeholder="you@company.com" required><button type="button">Send OTP</button></div></label>
+            <label>Enter email OTP<input name="email_otp" type="text" inputmode="numeric" placeholder="6-digit code"></label>
+            <label>Phone number<div class="input-action"><input name="phone" type="tel" placeholder="+91 98765 43210" required><button type="button">Send OTP</button></div></label>
+            <label>Enter phone OTP<input name="phone_otp" type="text" inputmode="numeric" placeholder="6-digit code"></label>
+            <label>LinkedIn profile<input name="linkedin" type="url" placeholder="https://linkedin.com/in/your-name"></label>
+          </div>
+          <div class="upload-row"><label class="upload-mini">Government ID <input type="file" name="government_id" accept=".pdf,.jpg,.jpeg,.png"><span>Choose PDF or image</span></label><label class="upload-mini">Authorization letter <input type="file" name="authorization_letter" accept=".pdf,.jpg,.jpeg,.png"><span>Choose PDF or image</span></label></div>
+          <div class="notice success"><b>Identity verification</b><span>Email and phone OTP will be confirmed before submission.</span></div>
+          <label class="check"><input type="checkbox" required> I am an authorized representative of this company.</label>
+          <label class="check"><input type="checkbox" required> The information provided is true and accurate.</label>
+        </div>
+
+        <div class="step-panel" data-panel="2">
+          <div class="panel-heading"><span class="heading-icon">02</span><div><p class="eyebrow">Company information</p><h1>Tell us about your company</h1><p>Provide the organization's legal and contact details.</p></div></div>
+          <div class="field-grid"><label>Company legal name<input name="company_name" type="text" placeholder="e.g. HeirSetu AI Pvt. Ltd." required></label><label>CIN / GST / PAN number<input name="corporate_id" type="text" placeholder="Enter registration number" required></label><label>Business type<select name="business_type" required><option value="">Select business type</option><option>Private Limited</option><option>Public Limited</option><option>Partnership</option><option>LLP</option><option>Sole Proprietorship</option></select></label><label>Date of incorporation<input name="incorporation_date" type="date"></label><label>Official company email<input name="company_email" type="email" placeholder="hr@company.com"></label><label>Company phone number<input name="company_phone" type="tel" placeholder="+91 22 1234 5678"></label><label>Company website<input name="website" type="url" placeholder="https://yourcompany.com"></label><label>Registered address<textarea name="registered_address" placeholder="Street, city, state, PIN code"></textarea></label></div>
+          <div class="notice info"><b>Company information</b><span>These details will be checked against your submitted documents.</span></div>
+        </div>
+
+        <div class="step-panel" data-panel="3">
+          <div class="panel-heading"><span class="heading-icon">03</span><div><p class="eyebrow">Upload documents</p><h1>Show us your proof</h1><p>Upload clear documents for company verification.</p></div></div>
+          <div class="document-grid"><label class="document-card"><b>Certificate of incorporation</b><small>Required document</small><input type="file" name="incorporation_document" accept=".pdf,.jpg,.jpeg,.png"><span class="drop-zone">＋<br><em>Drop or click to upload</em><small>PDF, JPG or PNG</small></span></label><label class="document-card"><b>GST / PAN document</b><small>Required document</small><input type="file" name="tax_document" accept=".pdf,.jpg,.jpeg,.png"><span class="drop-zone">＋<br><em>Drop or click to upload</em><small>PDF, JPG or PNG</small></span></label><label class="document-card"><b>Business license / owner ID</b><small>Required document</small><input type="file" name="license_document" accept=".pdf,.jpg,.jpeg,.png"><span class="drop-zone">＋<br><em>Drop or click to upload</em><small>PDF, JPG or PNG</small></span></label></div>
+          <div class="notice info"><b>Documents uploaded securely</b><span>Our verification team will review the authenticity of your documents.</span></div>
+        </div>
+
+        <div class="step-panel" data-panel="4">
+          <div class="panel-heading"><span class="heading-icon">04</span><div><p class="eyebrow">Verify & secure</p><h1>Secure your account</h1><p>Create a password and confirm your consent.</p></div></div>
+          <div class="security-layout"><div class="field-grid"><label>Create password<input name="password" type="password" placeholder="At least 8 characters" minlength="8"></label><label>Confirm password<input name="confirm_password" type="password" placeholder="Repeat your password"></label></div><aside class="checklist"><b>What happens next</b><span>✓ Secure data processing</span><span>✓ Document verification</span><span>✓ Company authenticity check</span><span>✓ Our team reviews your application</span></aside></div>
+          <label class="check"><input type="checkbox" required> I confirm that the information provided is true.</label><label class="check"><input type="checkbox" required> I agree to the Terms & Conditions and Privacy Policy.</label>
+        </div>
+
+        <div class="step-panel result-panel" data-panel="5"><div class="success-mark">✓</div><p class="eyebrow">Application submitted successfully</p><h1>You are all set.</h1><p>Thank you for registering. Your application is now being reviewed.</p><div class="result-grid"><div><small>Application ID</small><b>HSR-2026-08-2100123</b></div><div><small>Current status</small><b class="orange">Verification in progress</b></div></div><div class="notice info"><b>What happens next?</b><span>We will notify you by email and SMS once verification is complete.</span></div></div>
+
+        <p class="validation-message" id="validationMessage" role="alert" aria-live="polite" style="display:none;margin:22px 0 0;padding:12px 14px;border:1px solid #f0b8b8;border-radius:7px;background:#fff4f4;color:#b42318;font-size:12px;font-weight:700"></p>
+        <footer class="form-actions"><button type="button" class="btn secondary" id="backButton">← Back</button><button type="button" class="btn primary" id="nextButton">Continue <span>→</span></button></footer>
+      </form>
+    </section>
+    <p class="privacy-note">🔒 Your information is encrypted and used only for verification and compliance purposes.</p>
+  </main>
+  <script src="{{ url_for('static', filename='js/company-register.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile | HeirSetuAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    .navbar {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+    .navbar a { text-decoration: none; color: #0066cc; font-weight: 700; }
+
+    .container { max-width: 700px; margin: 0 auto; padding: 0 2rem; }
+
+    .card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .help-text {
+      font-size: 0.9rem;
+      color: #999;
+      margin-top: 0.5rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      display: block;
+      width: auto;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem;
+      padding-top: 2rem;
+      border-top: 2px solid #f0f0f0;
+      color: #333;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn.primary {
+      background: #0066cc;
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: #0052a3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,102,204,0.3);
+    }
+
+    .btn.secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn.secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .success-msg {
+      background: #f0f8e8;
+      border-left: 4px solid #00cc99;
+      padding: 1rem;
+      border-radius: 4px;
+      color: #2d5016;
+      margin-bottom: 1.5rem;
+    }
+
+    .error-msg {
+      background: #fff4f4;
+      border-left: 4px solid #e74c3c;
+      padding: 1rem;
+      border-radius: 4px;
+      color: #c0392b;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .btn-group { flex-direction: column; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="{{ url_for('candidate.view_profile') }}">← Back to Profile</a>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <h1>✏️ Edit Your Profile</h1>
+      <p class="subtitle">Keep your profile up-to-date to attract employers</p>
+
+      <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        <!-- Basic Information -->
+        <h2 class="section-title">👤 Basic Information</h2>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <p style="padding: 0.75rem; background: #f9f9f9; border-radius: 6px; color: #666;">{{ user.name }}</p>
+          <p class="help-text">Contact support to change your name</p>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <p style="padding: 0.75rem; background: #f9f9f9; border-radius: 6px; color: #666;">{{ user.email }}</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            {{ form.phone.label }}
+            {{ form.phone(placeholder="+91 98765 43210") }}
+            {% if form.phone.errors %}<div class="error-msg">{{ form.phone.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="form-group">
+            {{ form.location.label }}
+            {{ form.location(placeholder="e.g., San Francisco, CA") }}
+            {% if form.location.errors %}<div class="error-msg">{{ form.location.errors[0] }}</div>{% endif %}
+          </div>
+        </div>
+
+        <!-- Professional Info -->
+        <h2 class="section-title">💼 Professional Information</h2>
+
+        <div class="form-group">
+          {{ form.headline.label }}
+          {{ form.headline(placeholder="e.g., Senior Full Stack Developer") }}
+          <p class="help-text">{{ form.headline.description }}</p>
+          {% if form.headline.errors %}<div class="error-msg">{{ form.headline.errors[0] }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.bio.label }}
+          {{ form.bio(placeholder="Tell us about your professional background, skills, and achievements...") }}
+          <p class="help-text">{{ form.bio.description }}</p>
+          {% if form.bio.errors %}<div class="error-msg">{{ form.bio.errors[0] }}</div>{% endif %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            {{ form.experience_level.label }}
+            {{ form.experience_level() }}
+            {% if form.experience_level.errors %}<div class="error-msg">{{ form.experience_level.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="form-group">
+            {{ form.total_experience_years.label }}
+            {{ form.total_experience_years(placeholder="e.g., 5.5") }}
+            {% if form.total_experience_years.errors %}<div class="error-msg">{{ form.total_experience_years.errors[0] }}</div>{% endif %}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            {{ form.current_title.label }}
+            {{ form.current_title(placeholder="e.g., Senior Developer") }}
+            {% if form.current_title.errors %}<div class="error-msg">{{ form.current_title.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="form-group">
+            {{ form.current_company.label }}
+            {{ form.current_company(placeholder="e.g., Google") }}
+            {% if form.current_company.errors %}<div class="error-msg">{{ form.current_company.errors[0] }}</div>{% endif %}
+          </div>
+        </div>
+
+        <!-- Links & Social -->
+        <h2 class="section-title">🔗 Links & Social Profiles</h2>
+
+        <div class="form-group">
+          {{ form.linkedin_url.label }}
+          {{ form.linkedin_url(placeholder="https://linkedin.com/in/yourname") }}
+          {% if form.linkedin_url.errors %}<div class="error-msg">{{ form.linkedin_url.errors[0] }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.github_url.label }}
+          {{ form.github_url(placeholder="https://github.com/yourname") }}
+          {% if form.github_url.errors %}<div class="error-msg">{{ form.github_url.errors[0] }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.portfolio_url.label }}
+          {{ form.portfolio_url(placeholder="https://yourportfolio.com") }}
+          {% if form.portfolio_url.errors %}<div class="error-msg">{{ form.portfolio_url.errors[0] }}</div>{% endif %}
+        </div>
+
+        <!-- Preferences -->
+        <h2 class="section-title">⚙️ Job Preferences</h2>
+
+        <div class="checkbox-group">
+          {{ form.is_open_to_work() }}
+          {{ form.is_open_to_work.label }}
+        </div>
+
+        <div class="form-group">
+          {{ form.visibility.label }}
+          {{ form.visibility() }}
+          <p class="help-text">Choose who can see your profile</p>
+        </div>
+
+        <!-- Submit -->
+        <div class="btn-group">
+          <a href="{{ url_for('candidate.view_profile') }}" class="btn secondary">Cancel</a>
+          <button type="submit" class="btn primary">💾 Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

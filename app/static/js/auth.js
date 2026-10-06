@@ -82,11 +82,8 @@ authForm.addEventListener('submit', async (e) => {
       return;
     }
 
-    // store JWT — httpOnly cookie is set server-side (preferred);
-    // access_token also returned here for use as a Bearer header on API calls.
-    sessionStorage.setItem('access_token', data.access_token);
-
-    window.location.href = data.role === 'company' ? '/company/dashboard' : '/candidate/home';
+    // HttpOnly cookie is set server-side by set_access_cookies
+    window.location.href = data.redirect || (data.role === 'company' ? '/company/dashboard' : '/candidate/home');
   } catch (err) {
     formError.textContent = 'Network error — please check your connection and try again.';
     formError.classList.remove('hidden');

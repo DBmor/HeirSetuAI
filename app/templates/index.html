@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HierSetuAI — Find Work That Moves You Forward</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --blue:#1557d6; --blue2:#0d47bd; --green:#24934e; --ink:#111827;
+  --muted:#667085; --line:#e7ebf1; --paper:#fff; --soft:#f8fafc;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:#fff}
+a{text-decoration:none;color:inherit}
+.container{width:min(1180px,92%);margin:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 23px;border-radius:8px;font-size:14px;font-weight:600;border:1px solid transparent;transition:.25s}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px #1557d625}
+.btn-primary:hover{background:var(--blue2);transform:translateY(-2px)}
+.btn-outline{background:#fff;border-color:#9aa5b5;color:#182334}
+.btn-green{background:var(--green);color:#fff}
+.btn-dark{background:#0b1627;color:#fff}
+.btn-green-outline{background:transparent;border-color:#39a864;color:#8be3a8}
+.small{font-size:12px;color:var(--muted)}
+
+nav{height:76px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:25px;letter-spacing:-1px}
+.brand-mark{width:29px;height:29px;position:relative}
+.brand-mark:before,.brand-mark:after{content:"";position:absolute;transform:skew(-30deg)}
+.brand-mark:before{width:8px;height:22px;background:var(--blue);left:4px;bottom:1px}
+.brand-mark:after{width:8px;height:14px;background:var(--green);right:4px;bottom:1px}
+.brand .ai{color:var(--green)}
+.nav-links{display:flex;gap:42px;font-size:14px;font-weight:500}
+.nav-actions{display:flex;align-items:center;gap:28px;font-size:14px}
+.nav-actions .btn{padding:11px 22px}
+
+.hero{min-height:460px;display:grid;grid-template-columns:1.02fr 1fr;gap:40px;align-items:center;position:relative}
+.hero h1{font-size:59px;line-height:1.08;letter-spacing:-3px;margin:0 0 22px;max-width:620px}
+.hero h1 span{color:var(--blue)}
+.hero p{font-size:17px;line-height:1.65;color:#4d5b6b;max-width:520px;margin-bottom:28px}
+.hero-buttons{display:flex;gap:15px}
+.people{display:flex;align-items:center;gap:13px;margin-top:34px}
+.avatars{display:flex}.avatar{width:37px;height:37px;border-radius:50%;border:3px solid white;margin-left:-8px;background:linear-gradient(135deg,#27364c,#d6a987)}
+.avatar:first-child{margin-left:0}.avatar:nth-child(2){background:linear-gradient(135deg,#1e5163,#e7c2a2)}.avatar:nth-child(3){background:linear-gradient(135deg,#644235,#d9b79b)}
+.people strong{color:var(--blue)}
+
+.hero-art{height:420px;position:relative}
+.orb{position:absolute;width:330px;height:330px;border-radius:50%;background:#edf3ff;right:20px;top:40px}
+.curve{position:absolute;border:1px dotted var(--blue);width:130px;height:130px;border-radius:50%;left:0;top:120px}
+.job-card,.match-card{position:absolute;background:#fff;border:1px solid #e5eaf1;border-radius:14px;box-shadow:0 14px 35px #1f3b6b12}
+.job-card{padding:18px;width:260px}
+.job-card.main{left:55px;top:12px}
+.job-card.right{right:0;top:62px}
+.job-card.bottom{right:30px;top:218px}
+.card-head{display:flex;gap:12px;align-items:flex-start}
+.company-icon{width:40px;height:40px;border-radius:8px;background:#0d1a2c;color:white;display:grid;place-items:center;font-weight:800;font-size:22px}
+.company-icon.blue{background:white;color:#1356c7;font-size:28px}.company-icon.green{background:#2c9b51;border-radius:50%}
+.card-title{font-size:14px;font-weight:700}.company{font-size:11px;margin-top:5px;color:#384454}
+.bookmark{margin-left:auto;color:#59677a;font-size:18px}
+.meta{font-size:11px;color:#59677a;margin:16px 0 9px}.salary{font-size:11px;font-weight:700}
+.tags{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}.tag{background:#f2f5f8;padding:6px 9px;border-radius:7px;font-size:10px;color:#475467}
+.job-card .apply{margin-top:13px;padding:9px 15px;font-size:11px}
+.match-card{left:30px;bottom:44px;padding:13px 18px;width:230px;display:flex;align-items:center;gap:12px}
+.circle95{width:48px;height:48px;border-radius:50%;border:3px solid #72c895;display:grid;place-items:center;font-size:13px;font-weight:700}.match-card b{font-size:12px}.match-card span{font-size:10px;color:#667085;display:block;margin-top:6px;line-height:1.4}
+
+.trusted{border-bottom:1px solid var(--line);padding:20px 0 28px;text-align:center}
+.trusted p{font-size:10px;color:#4b5565;letter-spacing:.4px}
+.logos{display:flex;justify-content:space-around;align-items:center;margin-top:17px;font-size:24px;font-weight:600;color:#384454}.logos span:nth-child(3){font-style:italic}
+
+.section{padding:46px 0}.section-title{text-align:center;font-size:27px;letter-spacing:-1px;margin:0}.section-sub{text-align:center;color:#667085;font-size:13px;margin-top:9px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px}
+.feature{display:flex;align-items:center;gap:16px;padding:0 38px;border-right:1px solid var(--line)}.feature:last-child{border:0}
+.iconbox{width:58px;height:58px;border-radius:12px;background:var(--blue);display:grid;place-items:center;color:white;font-size:30px;box-shadow:0 9px 20px #1557d620}.iconbox.green{background:var(--green)}
+.feature b{font-size:14px}.feature p{font-size:12px;line-height:1.5;color:#667085;margin:6px 0 0}
+
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:5px}
+.panel{min-height:315px;border-radius:10px;padding:30px 25px;position:relative;overflow:hidden;border:1px solid #edf0f4}
+.panel.left{background:linear-gradient(100deg,#f5f8ff,#eef3fb)}.panel.right{background:linear-gradient(100deg,#f5fbf7,#edf8f1)}
+.label{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--blue)}.right .label{color:var(--green)}
+.panel h3{font-size:23px;line-height:1.25;max-width:260px;margin:13px 0}.panel p{font-size:12px;line-height:1.65;color:#59677a;max-width:300px}
+.checks{display:grid;gap:12px;margin:22px 0}.check{font-size:12px;color:#3f4c5e}.check:before{content:"✓";background:var(--blue);color:#fff;border-radius:50%;padding:2px 5px;margin-right:9px}.right .check:before{background:var(--green)}
+.mini-dashboard{position:absolute;right:17px;bottom:16px;width:43%;min-width:210px;background:#fff;border:1px solid #e5eaf1;border-radius:12px;padding:14px;box-shadow:0 12px 25px #1e3a5f0b}
+.mini-head{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600}.mini-avatar{width:35px;height:35px;border-radius:50%;background:linear-gradient(135deg,#31445b,#efc8b1)}.progress-row{display:flex;justify-content:space-between;font-size:10px;margin:15px 0 7px}.progress{height:4px;background:#e5e7eb;border-radius:9px}.progress i{display:block;width:84%;height:100%;background:var(--blue);border-radius:9px}
+.reco{font-size:9px;color:#667085;margin:14px 0 7px}.mini-job{font-size:10px;padding:7px 0;display:flex;gap:8px;align-items:center}.mini-job i{width:18px;height:18px;border-radius:4px;background:#172033;color:#fff;font-style:normal;display:grid;place-items:center}
+.applicants{font-size:28px;font-weight:700}.up{font-size:10px;color:var(--green)}.chart{height:38px;margin:8px 0;background:linear-gradient(160deg,transparent 48%,#38a867 49%,#38a867 52%,transparent 53%);opacity:.8}
+.app-row{display:flex;align-items:center;gap:7px;font-size:10px;padding:6px 0}.app-row .mini-avatar{width:25px;height:25px}.app-row span{color:#667085;font-size:9px}
+
+.how{text-align:center;padding-top:10px}.steps{display:grid;grid-template-columns:repeat(4,1fr);margin-top:26px}.step{position:relative}.step:not(:last-child):after{content:"→";position:absolute;right:-5px;top:17px;color:#6b7280}.stepnum{display:flex;justify-content:center;align-items:center;gap:8px}.num{width:25px;height:25px;border-radius:50%;background:#f1f3f6;display:grid;place-items:center;font-size:11px}.stepicon{width:50px;height:50px;border-radius:50%;background:#f1f5f9;display:grid;place-items:center;font-size:26px;color:var(--blue)}.step:nth-child(2) .stepicon,.step:nth-child(4) .stepicon{color:var(--green)}
+.step b{display:block;font-size:12px;margin-top:12px}.step p{font-size:10px;color:#667085;line-height:1.5;margin:7px auto;max-width:180px}
+
+.jobs-head{display:flex;justify-content:space-between;align-items:end;margin-top:25px}.jobs-head h2{font-size:20px;margin:0}.jobs-head p{font-size:11px;color:#667085;margin:6px 0}.jobs-head a{font-size:11px;color:var(--blue);font-weight:600}
+.job-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}.featured{padding:15px;border:1px solid #e5eaf1;border-radius:9px}.featured .card-head{gap:8px}.featured .company-icon{width:29px;height:29px;font-size:16px}.featured .meta{margin:11px 0 5px}.featured .tags{margin-top:12px}.featured .tag{font-size:9px;padding:5px 8px}
+
+.cta{margin:15px 0 0;background:#071326;color:white;border-radius:10px;min-height:115px;padding:25px;display:flex;align-items:center;position:relative;overflow:hidden}.cta:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#163d84;opacity:.3;right:-20px;bottom:-120px}.cta h2{font-size:23px;margin:0 0 8px}.cta h2 span{color:#63c77d}.cta p{font-size:12px;color:#e1e7f0;margin:0;max-width:430px;line-height:1.6}.cta-actions{display:flex;gap:12px;margin-left:auto;margin-right:270px;z-index:1}.cta .btn{padding:12px 23px}
+
+footer{padding:24px 0 35px;display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:28px;font-size:11px}.footer-brand .brand{font-size:22px}.social{display:flex;gap:16px;font-size:16px;margin-top:13px}.copy{font-size:9px;color:#667085;margin-top:18px}.foot-col b{font-size:11px}.foot-col a{display:block;color:#667085;margin-top:9px}
+
+@media(max-width:900px){
+ .nav-links{display:none}.hero{grid-template-columns:1fr}.hero-art{height:370px}.hero h1{font-size:46px}.dual{grid-template-columns:1fr}.job-grid{grid-template-columns:repeat(2,1fr)}.features{grid-template-columns:1fr}.feature{border-right:0;border-bottom:1px solid var(--line);padding:16px}.logos{flex-wrap:wrap;gap:18px;font-size:18px}.cta-actions{margin-right:0}.cta{flex-wrap:wrap}.cta-actions{margin-left:0}
+}
+@media(max-width:600px){
+ nav{height:65px}.brand{font-size:20px}.nav-actions{gap:10px}.nav-actions>a{display:none}.nav-actions .btn{padding:9px 12px}
+ .hero{padding-top:30px}.hero h1{font-size:38px;letter-spacing:-2px}.hero-art{transform:scale(.9);transform-origin:left top;width:110%}
+ .panel{min-height:500px}.mini-dashboard{width:88%;left:6%;right:auto}.steps{grid-template-columns:1fr 1fr;gap:28px}.step:after{display:none}.job-grid{grid-template-columns:1fr}.cta h2{font-size:20px}
+ footer{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.cta{padding:22px}.hero-buttons{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<header class="container">
+  <nav>
+    <a class="brand" href="/"><span class="brand-mark"></span><span>HierSetu<span class="ai">AI</span></span></a>
+    <div class="nav-links"><a href="#jobs">Find Jobs</a><a href="#companies">Companies</a><a href="#how">How It Works</a><a href="#resources">Resources⌄</a></div>
+    <div class="nav-actions"><a href="/auth/login">Log in</a><a class="btn btn-primary" href="/auth/register-candidate">Get Started</a></div>
+  </nav>
+</header>
+
+<main>
+<section class="container hero">
+  <div>
+    <h1>Find work that<br>moves you <span>forward.</span></h1>
+    <p>Discover opportunities, connect with great companies, and take the next step in your career.</p>
+    <div class="hero-buttons"><a class="btn btn-primary" href="/auth/register-candidate">Explore Jobs →</a><a class="btn btn-outline" href="/auth/register-company">▷ &nbsp; I'm Hiring</a></div>
+    <div class="people"><div class="avatars"><div class="avatar"></div><div class="avatar"></div><div class="avatar"></div></div><div class="small">Join <strong>2M+</strong> professionals finding<br>their dream opportunities</div></div>
+  </div>
+
+  <div class="hero-art">
+    <div class="orb"></div><div class="curve"></div>
+    <div class="job-card main">
+      <div class="card-head"><div class="company-icon">N</div><div><div class="card-title">Product Designer</div><div class="company">Notion</div></div><div class="bookmark">⌑</div></div>
+      <div class="meta">Remote &nbsp;•&nbsp; Full-time</div><div class="salary">₹18L – ₹28L per year</div>
+      <div class="tags"><span class="tag">Figma</span><span class="tag">UX Design</span><span class="tag">Product</span></div><a class="btn btn-primary apply">Apply Now</a>
+    </div>
+    <div class="job-card right">
+      <div class="card-head"><div class="company-icon blue">◢</div><div><div class="card-title">Software Engineer</div><div class="company">Razorpay</div></div><div class="bookmark">⌑</div></div>
+      <div class="meta">Bengaluru &nbsp;•&nbsp; Hybrid</div><div class="salary">₹15L – ₹25L per year</div>
+      <div class="tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span></div>
+    </div>
+    <div class="job-card bottom">
+      <div class="card-head"><div class="company-icon green">S</div><div><div class="card-title">Data Analyst</div><div class="company">Swiggy</div></div><div class="bookmark">⌑</div></div>
+      <div class="meta">Bengaluru &nbsp;•&nbsp; Full-time</div><div class="salary">₹8L – ₹12L per year</div>
+      <div class="tags"><span class="tag">SQL</span><span class="tag">Python</span><span class="tag">Analytics</span></div>
+    </div>
+    <div class="match-card"><div class="circle95">95%</div><div><b>Great Match!</b><span>This role matches your skills and experience.</span></div></div>
+  </div>
+</section>
+
+<section class="trusted">
+ <div class="container"><p>TRUSTED BY PEOPLE AND TEAMS AT</p><div class="logos"><span>Google</span><span>▦ Microsoft</span><span>Razorpay</span><span>▣ Notion</span><span>♧ airbnb</span><span>stripe</span></div></div>
+</section>
+
+<section class="container section">
+ <h2 class="section-title">A better way to build your career.</h2><p class="section-sub">Everything you need to find the right opportunity, in one place.</p>
+ <div class="features">
+  <div class="feature"><div class="iconbox">⌕</div><div><b>Discover</b><p>Find jobs that match your skills, interests and goals.</p></div></div>
+  <div class="feature"><div class="iconbox green">♡</div><div><b>Save</b><p>Bookmark jobs you like and track them easily.</p></div></div>
+  <div class="feature"><div class="iconbox">➤</div><div><b>Apply</b><p>Apply in seconds and manage all your applications in one place.</p></div></div>
+ </div>
+</section>
+
+<section class="container dual" id="companies">
+ <div class="panel left">
+   <div class="label">FOR JOB SEEKERS</div><h3>Your next opportunity is closer than you think.</h3><p>Create your profile, discover relevant jobs and get hired by top companies.</p>
+   <div class="checks"><div class="check">Create a professional profile</div><div class="check">Discover relevant opportunities</div><div class="check">Track your applications</div></div>
+   <a class="btn btn-primary" href="/auth/register-candidate">Get Started →</a>
+   <div class="mini-dashboard">
+     <div class="mini-head"><div class="mini-avatar"></div>Hi, Ananya 👋</div><div class="progress-row"><span>Profile Strength</span><b>85%</b></div><div class="progress"><i></i></div>
+     <div class="reco">Recommended for you</div>
+     <div class="mini-job"><i>N</i>Product Designer</div><div class="mini-job"><i>F</i>UI/UX Designer</div><div class="mini-job"><i>A</i>Visual Designer</div>
+     <div style="font-size:10px;color:#1557d6;margin-top:9px">View all recommendations →</div>
+   </div>
+ </div>
+
+ <div class="panel right">
+   <div class="label">FOR COMPANIES</div><h3>Build your team with the right people.</h3><p>Post jobs, connect with talented candidates and streamline your hiring.</p>
+   <div class="checks"><div class="check">Post jobs in minutes</div><div class="check">Review and filter candidates</div><div class="check">Hire the best, faster</div></div>
+   <a class="btn btn-green">Start Hiring →</a>
+   <div class="mini-dashboard">
+     <div style="font-size:10px;color:#667085">Applicants</div><div class="applicants">124</div><div class="up">↑12% this week</div><div class="chart"></div><div class="reco">Recent Applicants</div>
+     <div class="app-row"><div class="mini-avatar"></div><div><b>Riya Sharma</b><br><span>Product Designer</span></div></div>
+     <div class="app-row"><div class="mini-avatar"></div><div><b>Arjun Mehta</b><br><span>UX Designer</span></div></div>
+     <div class="app-row"><div class="mini-avatar"></div><div><b>Manav Verma</b><br><span>Visual Designer</span></div></div>
+     <div style="font-size:10px;color:#24934e;margin-top:7px">View all applicants →</div>
+   </div>
+ </div>
+</section>
+
+<section class="container section how" id="how">
+ <h2 class="section-title" style="font-size:20px">How it works</h2><p class="section-sub">Simple steps to your next big opportunity.</p>
+ <div class="steps">
+   <div class="step"><div class="stepnum"><span class="num">1</span><span class="stepicon">♟</span></div><b>Create your profile</b><p>Sign up and build your profile in minutes.</p></div>
+   <div class="step"><div class="stepnum"><span class="num">2</span><span class="stepicon">⌕</span></div><b>Discover opportunities</b><p>Find jobs that match your skills and interests.</p></div>
+   <div class="step"><div class="stepnum"><span class="num">3</span><span class="stepicon">➤</span></div><b>Apply with confidence</b><p>Apply to jobs and showcase your best self.</p></div>
+   <div class="step"><div class="stepnum"><span class="num">4</span><span class="stepicon">✓</span></div><b>Track your progress</b><p>Stay updated on your applications and interviews.</p></div>
+ </div>
+</section>
+
+<section class="container" id="jobs">
+ <div class="jobs-head"><div><h2>Featured opportunities</h2><p>Handpicked jobs from top companies.</p></div><a href="#">Explore all jobs →</a></div>
+ <div class="job-grid">
+  <div class="featured"><div class="card-head"><div class="company-icon">N</div><div><div class="card-title">Product Designer</div><div class="company">Notion</div></div><div class="bookmark">⌑</div></div><div class="meta">Remote • Full-time</div><div class="salary">₹18L – ₹28L</div><div class="tags"><span class="tag">Figma</span><span class="tag">UX Design</span><span class="tag">Product</span></div></div>
+  <div class="featured"><div class="card-head"><div class="company-icon blue">◢</div><div><div class="card-title">Software Engineer</div><div class="company">Razorpay</div></div><div class="bookmark">⌑</div></div><div class="meta">Bengaluru • Hybrid</div><div class="salary">₹15L – ₹25L</div><div class="tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span></div></div>
+  <div class="featured"><div class="card-head"><div class="company-icon green">S</div><div><div class="card-title">Data Analyst</div><div class="company">Swiggy</div></div><div class="bookmark">⌑</div></div><div class="meta">Bengaluru • Full-time</div><div class="salary">₹8L – ₹12L</div><div class="tags"><span class="tag">SQL</span><span class="tag">Python</span><span class="tag">Analytics</span></div></div>
+  <div class="featured"><div class="card-head"><div class="company-icon blue">◧</div><div><div class="card-title">Frontend Developer</div><div class="company">Zerodha</div></div><div class="bookmark">⌑</div></div><div class="meta">Bengaluru • Full-time</div><div class="salary">₹12L – ₹18L</div><div class="tags"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">CSS</span></div></div>
+ </div>
+</section>
+
+<section class="container cta">
+ <div><h2>Your next chapter <span>starts here.</span></h2><p>Whether you're looking for a dream job or the perfect candidate, HierSetuAI is here to help.</p></div>
+ <div class="cta-actions"><a class="btn btn-primary">Find Jobs</a><a class="btn btn-green-outline">Start Hiring</a></div>
+</section>
+</main>
+
+<footer class="container" id="resources">
+ <div class="footer-brand"><div class="brand"><span class="brand-mark"></span><span>HierSetu<span class="ai">AI</span></span></div><div class="social">in &nbsp; ♥ &nbsp; ◎</div><div class="copy">© 2026 HierSetuAI. All rights reserved.</div></div>
+ <div class="foot-col"><b>For Job Seekers</b><a>Find Jobs</a><a>Browse Companies</a><a>Resources</a><a>Career Advice</a></div>
+ <div class="foot-col"><b>For Companies</b><a>Post a Job</a><a>Pricing</a><a>Browse Candidates</a><a>Company Login</a></div>
+ <div class="foot-col"><b>Company</b><a>About HierSetuAI</a><a>Careers</a><a>Contact Us</a><a>Blog</a></div>
+ <div class="foot-col"><b>Support</b><a>Help Center</a><a>Privacy Policy</a><a>Terms of Service</a></div>
+</footer>
+</body>
+</html>

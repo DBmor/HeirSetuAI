@@ -1,6 +1,6 @@
 # app/blueprints/auth/routes.py
-from flask import Blueprint, request, jsonify, redirect, url_for, session
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
+from flask import Blueprint, request, jsonify, redirect, url_for, session, render_template
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 import bcrypt
 
 from app.extensions import db, oauth
@@ -21,30 +21,62 @@ def check_password(plain: str, hashed: str) -> bool:
 def issue_token(user: User) -> str:
     # role goes into the JWT as a claim — every protected route reads this,
     # instead of hitting the DB again to check who's allowed where.
+    role_str = user.role.value if hasattr(user.role, "value") else str(user.role)
     return create_access_token(
-        identity=user.id,
-        additional_claims={"role": user.role.value},
+        identity=str(user.id),
+        additional_claims={"role": role_str},
     )
+
+
+# ---------- page routes ----------
+@auth_bp.route("/login", methods=["GET"])
+def login_page():
+    """Render login page"""
+    return render_template("auth/login.html")
+
+
+@auth_bp.route("/register-candidate", methods=["GET"])
+def register_candidate_page():
+    """Render candidate registration page"""
+    return render_template("auth/register_candidate.html")
+
+
+@auth_bp.route("/register-company", methods=["GET"])
+def register_company_page():
+    """Render company registration page"""
+    return render_template("auth/register_company.html")
 
 
 # ---------- register ----------
 @auth_bp.route("/register", methods=["POST"])
 def register():
-    data = request.get_json()
+    # Handle both JSON and form data
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+    
     role = data.get("role")
     email = data.get("email", "").strip().lower()
     password = data.get("password")
     name = data.get("name")
+    company_name = data.get("company_name")
+    website = data.get("website")
 
     if role not in ("candidate", "company"):
         return jsonify({"message": "Invalid role."}), 400
-    if not email or not password or not name:
+    
+    # For candidates, require 'name'; for companies, require 'company_name' and 'website'
+    if role == "candidate" and (not email or not password or not name):
         return jsonify({"message": "Name, email, and password are required."}), 400
+    if role == "company" and (not email or not password or not company_name or not website):
+        return jsonify({"message": "Company name, website, email, and password are required."}), 400
+    
     if User.query.filter_by(email=email).first():
         return jsonify({"message": "An account with this email already exists."}), 409
 
     user = User(
-        name=name,
+        name=company_name if role == "company" else name,
         email=email,
         password_hash=hash_password(password),
         role=RoleEnum(role),
@@ -55,41 +87,81 @@ def register():
     if role == "company":
         profile = CompanyProfile(
             user_id=user.id,
-            website=data.get("website"),
+            website=website,
+            industry=data.get("industry"),
+            employee_count=data.get("employee_count"),
             status="pending",
         )
         db.session.add(profile)
-        # NOTE: trigger Agent 3 (fake_company_detector) here, async via Celery:
-        # from app.tasks.company_check_tasks import run_company_check
-        # run_company_check.delay(user.id)
 
     db.session.commit()
 
     token = issue_token(user)
-    return jsonify({"access_token": token, "role": role}), 201
+    redirect_url = "/candidate/home" if role == "candidate" else "/company/dashboard"
+    
+    if request.is_json:
+        response = jsonify({"access_token": token, "role": role, "redirect": redirect_url})
+        set_access_cookies(response, token)
+        return response, 201
+    else:
+        response = redirect(redirect_url)
+        set_access_cookies(response, token)
+        return response
 
 
 # ---------- login ----------
 @auth_bp.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
+def login_post():
+    # Handle both JSON and form data
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+    
     email = data.get("email", "").strip().lower()
     password = data.get("password")
 
     user = User.query.filter_by(email=email).first()
     if not user or not user.password_hash or not check_password(password, user.password_hash):
-        return jsonify({"message": "Invalid email or password."}), 401
+        error_msg = {"message": "Invalid email or password."}
+        if request.is_json:
+            return jsonify(error_msg), 401
+        else:
+            return render_template("auth/login.html", error=error_msg["message"]), 401
 
     token = issue_token(user)
-    return jsonify({"access_token": token, "role": user.role.value}), 200
+    user_role_str = user.role.value if hasattr(user.role, "value") else str(user.role)
+    redirect_url = "/candidate/home" if user_role_str == "candidate" else "/company/dashboard"
+    
+    if request.is_json:
+        response = jsonify({"access_token": token, "role": user_role_str, "redirect": redirect_url})
+        set_access_cookies(response, token)
+        return response, 200
+    else:
+        response = redirect(redirect_url)
+        set_access_cookies(response, token)
+        return response
+
+
+# ---------- logout ----------
+@auth_bp.route("/logout", methods=["GET", "POST"])
+def logout():
+    """Logout route clearing JWT HttpOnly cookies"""
+    response = redirect(url_for("auth.login_page"))
+    unset_jwt_cookies(response)
+    return response
 
 
 # ---------- Google OAuth ----------
+@auth_bp.route("/google")
 @auth_bp.route("/google/login")
 def google_login():
     # role is passed from the frontend button so the callback knows
     # whether to create a candidate or a company account
-    session["oauth_role"] = request.args.get("role", "candidate")
+    role = request.args.get("role", "candidate")
+    if role not in ("candidate", "company"):
+        role = "candidate"
+    session["oauth_role"] = role
     redirect_uri = url_for("auth.google_callback", _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
 
@@ -114,16 +186,23 @@ def google_callback():
         db.session.add(user)
         db.session.flush()
         if role == "company":
-            db.session.add(CompanyProfile(user_id=user.id, status="pending"))
+            db.session.add(CompanyProfile(
+                user_id=user.id,
+                industry=session.pop("company_industry", None),
+                employee_count=session.pop("company_employee_count", None),
+                status="pending"
+            ))
         db.session.commit()
     elif not user.google_id:
         user.google_id = userinfo["sub"]
         db.session.commit()
 
     jwt_token = issue_token(user)
-    # redirect back to frontend with the token; frontend JS picks it up and stores it
-    frontend_redirect = "/candidate/home" if user.role == RoleEnum.candidate else "/company/dashboard"
-    return redirect(f"{frontend_redirect}?token={jwt_token}")
+    user_role_str = user.role.value if hasattr(user.role, "value") else str(user.role)
+    frontend_redirect = "/candidate/home" if user_role_str == "candidate" else "/company/dashboard"
+    response = redirect(frontend_redirect)
+    set_access_cookies(response, jwt_token)
+    return response
 
 
 # ---------- role guard decorator, used across the app ----------
@@ -136,6 +215,9 @@ def role_required(required_role: str):
         def wrapper(*args, **kwargs):
             claims = get_jwt()
             if claims.get("role") != required_role:
+                accept = request.headers.get("Accept", "")
+                if "text/html" in accept or request.accept_mimetypes.accept_html:
+                    return redirect(url_for("auth.login_page"))
                 return jsonify({"message": "Forbidden — wrong account type."}), 403
             return fn(*args, **kwargs)
         return wrapper
@@ -148,3 +230,4 @@ def role_required(required_role: str):
 def me():
     user = User.query.get(get_jwt_identity())
     return jsonify({"id": user.id, "name": user.name, "role": user.role.value})
+
